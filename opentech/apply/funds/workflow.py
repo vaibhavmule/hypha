@@ -160,8 +160,6 @@ reviewer_review_permissions = make_permissions(edit=[staff_can], review=[staff_c
 
 applicant_edit_permissions = make_permissions(edit=[applicant_can], review=[staff_can])
 
-staff_applicant_edit_permissions = make_permissions(edit=[staff_can, applicant_can])
-
 staff_edit_permissions = make_permissions(edit=[staff_can])
 
 
@@ -184,6 +182,7 @@ SingleStageDefinition = [
                 'rejected': 'Dismiss',
                 'more_info': 'Request More Information',
                 'accepted': 'Accept',
+                'almost': 'Accept but additional info required',
                 'determination': 'Ready For Determination',
             },
             'display': 'Screening',
@@ -199,6 +198,7 @@ SingleStageDefinition = [
                     'method': 'create_revision',
                 },
                 'accepted': 'Accept',
+                'almost': 'Accept but additional info required',
                 'rejected': 'Dismiss',
                 'determination': 'Ready For Determination',
             },
@@ -222,6 +222,7 @@ SingleStageDefinition = [
         'post_review_discussion': {
             'transitions': {
                 'accepted': 'Accept',
+                'almost': 'Accept but additional info required',
                 'rejected': 'Dismiss',
                 'determination': 'Ready For Determination',
                 'post_review_more_info': 'Request More Information',
@@ -238,6 +239,7 @@ SingleStageDefinition = [
                     'method': 'create_revision',
                 },
                 'accepted': 'Accept',
+                'almost': 'Accept but additional info required',
                 'rejected': 'Dismiss',
                 'determination': 'Ready For Determination',
             },
@@ -250,6 +252,7 @@ SingleStageDefinition = [
         'determination': {
             'transitions': {
                 'accepted': 'Accept',
+                'almost': 'Accept but additional info required',
                 'rejected': 'Dismiss',
             },
             'display': 'Ready for Determination',
@@ -258,11 +261,16 @@ SingleStageDefinition = [
         },
     },
     {
+        'almost': {
+            'display': 'Accept but additional info required',
+            'stage': Request,
+            'permissions': applicant_edit_permissions,
+        },
         'accepted': {
             'display': 'Accepted',
             'future': 'Application Outcome',
             'stage': Request,
-            'permissions': staff_applicant_edit_permissions,
+            'permissions': staff_edit_permissions,
         },
         'rejected': {
             'display': 'Dismissed',
@@ -349,6 +357,7 @@ SingleStageExternalDefinition = [
         'ext_post_external_review_discussion': {
             'transitions': {
                 'ext_accepted': 'Accept',
+                'ext_almost': 'Accept but additional info required',
                 'ext_rejected': 'Dismiss',
                 'ext_post_external_review_more_info': 'Request More Information',
                 'ext_determination': 'Ready For Determination',
@@ -374,6 +383,7 @@ SingleStageExternalDefinition = [
         'ext_determination': {
             'transitions': {
                 'ext_accepted': 'Accept',
+                'ext_almost': 'Accept but additional info required',
                 'ext_rejected': 'Dismiss',
             },
             'display': 'Ready for Determination',
@@ -382,11 +392,19 @@ SingleStageExternalDefinition = [
         },
     },
     {
+        'ext_almost': {
+            'transitions': {
+                'ext_accepted': 'Accept',
+            },
+            'display': 'Accept but additional info required',
+            'stage': RequestExt,
+            'permissions': applicant_edit_permissions,
+        },
         'ext_accepted': {
             'display': 'Accepted',
             'future': 'Application Outcome',
             'stage': RequestExt,
-            'permissions': staff_applicant_edit_permissions,
+            'permissions': staff_edit_permissions,
         },
         'ext_rejected': {
             'display': 'Dismissed',
@@ -591,6 +609,7 @@ DoubleStageDefinition = [
         'post_external_review_discussion': {
             'transitions': {
                 'proposal_accepted': 'Accept',
+                'proposal_almost': 'Accept but additional info required',
                 'proposal_rejected': 'Dismiss',
                 'proposal_determination': 'Ready For Final Determination',
                 'post_external_review_more_info': 'Request More Information',
@@ -616,6 +635,7 @@ DoubleStageDefinition = [
         'proposal_determination': {
             'transitions': {
                 'proposal_accepted': 'Accept',
+                'proposal_almost': 'Accept but additional info required',
                 'proposal_rejected': 'Dismiss',
             },
             'display': 'Ready for Final Determination',
@@ -624,11 +644,16 @@ DoubleStageDefinition = [
         },
     },
     {
+        'proposal_almost': {
+            'display': 'Accept but additional info required',
+            'stage': Proposal,
+            'permissions': applicant_edit_permissions,
+        },
         'proposal_accepted': {
             'display': 'Accepted',
             'future': 'Final Determination',
             'stage': Proposal,
-            'permissions': staff_applicant_edit_permissions,
+            'permissions': staff_edit_permissions,
         },
         'proposal_rejected': {
             'display': 'Dismissed',
