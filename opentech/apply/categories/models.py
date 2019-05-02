@@ -21,6 +21,7 @@ from treebeard.mp_tree import MP_Node
 
 class Option(Orderable):
     value = models.CharField(max_length=255)
+    is_archived = models.BooleanField(default=False, verbose_name=_("Archived"))
     category = ParentalKey('Category', related_name='options')
 
 
@@ -32,10 +33,12 @@ class Category(ClusterableModel):
     """
     name = models.CharField(max_length=255)
     help_text = models.CharField(max_length=255, blank=True)
+    is_archived = models.BooleanField(default=False, verbose_name=_("Archived"))
 
     panels = [
         FieldPanel('name'),
         FieldPanel('help_text'),
+        FieldPanel('is_archived'),
         InlinePanel('options', label='Options'),
     ]
 
