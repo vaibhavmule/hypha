@@ -605,21 +605,23 @@ class ReviewerSubmissionDetailView(ReviewContextMixin, ActivityContextMixin, Del
     def dispatch(self, request, *args, **kwargs):
         submission = self.get_object()
         # If the requesting user submitted the application, return the Applicant view.
-        # Reviewers and partners may somtimes be appliants as well.
+        # Reviewers may sometimes be applicants as well.
         if submission.user == request.user:
             return ApplicantSubmissionDetailView.as_view()(request, *args, **kwargs)
         return super().dispatch(request, *args, **kwargs)
 
 
-class PartnerSubmissionDetailView(ReviewContextMixin, ActivityContextMixin, DelegateableView, DetailView):
-    template_name_suffix = '_partner_detail'
+class PartnerSubmissionDetailView(ActivityContextMixin, DelegateableView, DetailView):
     model = ApplicationSubmission
     form_views = [CommentFormView]
+
+    def get_object(self):
+        return super().get_object().from_draft()
 
     def dispatch(self, request, *args, **kwargs):
         submission = self.get_object()
         # If the requesting user submitted the application, return the Applicant view.
-        # Reviewers and partners may somtimes be appliants as well.
+        # Partners may sometimes be applicants as well.
         if submission.user == request.user:
             return ApplicantSubmissionDetailView.as_view()(request, *args, **kwargs)
         # Only allow partners in the submission they are added as partners
@@ -637,7 +639,7 @@ class CommunitySubmissionDetailView(ReviewContextMixin, ActivityContextMixin, De
     def dispatch(self, request, *args, **kwargs):
         submission = self.get_object()
         # If the requesting user submitted the application, return the Applicant view.
-        # Reviewers and partners may somtimes be appliants as well.
+        # Reviewers may sometimes be applicants as well.
         if submission.user == request.user:
             return ApplicantSubmissionDetailView.as_view()(request, *args, **kwargs)
         # Only allow community reviewers in submission with a community review state.
@@ -843,7 +845,7 @@ class PartnerSubmissionEditView(ApplicantSubmissionEditView):
     def dispatch(self, request, *args, **kwargs):
         submission = self.get_object()
         # If the requesting user submitted the application, return the Applicant view.
-        # Partners may somtimes be appliants as well.
+        # Partners may somtimes be applicants as well.
         partner_has_access = submission.partners.filter(pk=request.user.pk).exists()
         if not partner_has_access and submission.user != request.user:
             raise PermissionDenied
