@@ -1,6 +1,5 @@
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.html import escape
-
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin,
     ModelAdminGroup,
