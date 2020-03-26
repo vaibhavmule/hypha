@@ -42,7 +42,7 @@
         $('.js-clipboard-button').on('click', function (e) {
             e.preventDefault();
             var questions = get_questions();
-            var $textarea = $('<textarea>').html(questions).addClass('visually-hidden-xxx');
+            var $textarea = $('<textarea>').html(questions).addClass('visually-hidden');
             $textarea.appendTo('body');
             $textarea.select();
             document.execCommand('copy');
