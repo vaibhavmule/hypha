@@ -6,7 +6,7 @@
     {% trans "Back to account" %}</a>
   </p>
 
-  <h1>{% block title %}{% trans "Account Security" %}{% endblock %}</h1>
+  <h1>{% block title %}{% trans "Two-Factor Authentication" %}{% endblock %}</h1>
 
   {% if default_device %}
     {% if default_device_type == 'TOTPDevice' %}
@@ -51,7 +51,7 @@
     <p><a href="{% url 'two_factor:backup_tokens' %}"
           class="btn btn-info">{% trans "Show Codes" %}</a></p>
 
-    <h3>{% trans "Disable Two-Factor Authentication" %}</h3>
+    <h2>{% trans "Disable Two-Factor Authentication" %}</h2>
     <p>{% blocktrans %}However we strongly discourage you to do so, you can
       also disable two-factor authentication for your account.{% endblocktrans %}</p>
     <p><a class="btn btn-default" href="{% url 'two_factor:disable' %}">

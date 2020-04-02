@@ -1,11 +1,5 @@
 {% load i18n %}
 
-{% if wizard.steps.prev %}
-  <button name="wizard_goto_step" type="submit"
-          value="{{ wizard.steps.prev }}"
-          class="button button--primary two-factor__back">{% trans "Back" %}</button>
-{% endif %}
-
 <button type="submit" class="button button--primary">{% trans "Next" %}</button>
 
 {% if cancel_url %}

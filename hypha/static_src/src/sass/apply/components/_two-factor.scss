@@ -5,6 +5,12 @@
         position: absolute;
         top:  .5rem;
     }
+
+    h1,
+    h2 {
+        @extend %h3;
+        font-weight: 700;
+    }
 }
 
 
