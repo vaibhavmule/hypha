@@ -207,6 +207,30 @@ class TestStaffSubmissionView(BaseSubmissionViewTestCase):
         self.assertTrue(hasattr(submission, 'project'))
         self.assertEquals(submission.project.id, project.id)
 
+    def test_screen_application_primary_action(self):
+        def assert_screen_application(content, action_displayed):
+            screen_application_button = '<a data-fancybox data-src="#screen-application" class="button button--bottom-space button--primary button--full-width is-not-disabled" href="#">Screen application</a>'
+
+            sidebar = content[content.find('<aside class="sidebar'):].replace('\\n', '')
+            sidebar = sidebar[:sidebar.find('</aside>') + len('</aside>')]
+
+            if action_displayed:
+                self.assertInHTML(screen_application_button, sidebar, count=1)
+            else:
+                self.assertInHTML(screen_application_button, sidebar, count=0)
+
+        # Phase: received / in_discussion - not screened
+        # Screen application should be displayed
+        response = self.get_page(self.submission)
+        assert_screen_application(str(response.content), True)
+
+        # Phase: received / in_discussion - screened
+        # Screen application should not be displayed
+        self.submission.screening_status = ScreeningStatusFactory()
+        self.submission.save()
+        response = self.get_page(self.submission)
+        assert_screen_application(str(response.content), False)
+
 
 class TestReviewersUpdateView(BaseSubmissionViewTestCase):
     user_factory = StaffFactory
