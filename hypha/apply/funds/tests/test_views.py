@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from bs4 import BeautifulSoup
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -206,6 +207,20 @@ class TestStaffSubmissionView(BaseSubmissionViewTestCase):
 
         self.assertTrue(hasattr(submission, 'project'))
         self.assertEquals(submission.project.id, project.id)
+
+    def test_screen_application_primary_action_is_displayed(self):
+        # Submission not screened
+        response = self.get_page(self.submission)
+        buttons = BeautifulSoup(response.content, 'html5lib').find(class_='sidebar').find_all('a', text='Screen application')
+        self.assertEqual(len(buttons), 1)
+
+    def test_screen_application_primary_action_is_not_displayed(self):
+        # Submission screened
+        self.submission.screening_status = ScreeningStatusFactory()
+        self.submission.save()
+        response = self.get_page(self.submission)
+        buttons = BeautifulSoup(response.content, 'html5lib').find(class_='sidebar').find_all('a', text='Screen application')
+        self.assertEqual(len(buttons), 0)
 
 
 class TestReviewersUpdateView(BaseSubmissionViewTestCase):
