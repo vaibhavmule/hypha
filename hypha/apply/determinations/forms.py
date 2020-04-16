@@ -17,7 +17,7 @@ User = get_user_model()
 
 
 class BaseDeterminationForm:
-    def __init__(self, *args, user, initial, action, **kwargs):
+    def __init__(self, *args, user, initial, action, edit=False, **kwargs):
         if 'site' in kwargs:
             site = kwargs.pop('site')
             self.form_settings = DeterminationFormSettings.for_site(site)
@@ -322,7 +322,7 @@ class BaseProposalDeterminationForm(forms.Form):
 
 
 class ConceptDeterminationForm(BaseConceptDeterminationForm, BaseNormalDeterminationForm):
-    def __init__(self, *args, submission, user, initial={}, instance=None, **kwargs):
+    def __init__(self, *args, submission, user, edit=False, initial={}, instance=None, **kwargs):
         initial.update(submission=submission.id)
 
         if instance:
@@ -330,7 +330,7 @@ class ConceptDeterminationForm(BaseConceptDeterminationForm, BaseNormalDetermina
                 if key not in self._meta.fields:
                     initial[key] = value
 
-        super(BaseNormalDeterminationForm, self).__init__(*args, initial=initial, user=user, instance=instance, **kwargs)
+        super(BaseNormalDeterminationForm, self).__init__(*args, initial=initial, user=user, instance=instance, edit=edit, **kwargs)
 
         for field in self._meta.widgets:
             self.fields[field].disabled = True
@@ -362,9 +362,13 @@ class ConceptDeterminationForm(BaseConceptDeterminationForm, BaseNormalDetermina
                 self.fields['proposal_form'].group = 1
                 self.fields.move_to_end('proposal_form', last=False)
 
+        if edit:
+            self.fields.pop('outcome')
+            self.draft_button_name = None
+
 
 class ProposalDeterminationForm(BaseProposalDeterminationForm, BaseNormalDeterminationForm):
-    def __init__(self, *args, submission, user, initial={}, instance=None, **kwargs):
+    def __init__(self, *args, submission, user, edit=False, initial={}, instance=None, **kwargs):
         initial.update(submission=submission.id)
 
         if instance:
@@ -372,7 +376,7 @@ class ProposalDeterminationForm(BaseProposalDeterminationForm, BaseNormalDetermi
                 if key not in self._meta.fields:
                     initial[key] = value
 
-        super(BaseNormalDeterminationForm, self).__init__(*args, initial=initial, user=user, instance=instance, **kwargs)
+        super(BaseNormalDeterminationForm, self).__init__(*args, initial=initial, user=user, instance=instance, edit=edit, **kwargs)
 
         for field in self._meta.widgets:
             self.fields[field].disabled = True
@@ -385,6 +389,10 @@ class ProposalDeterminationForm(BaseProposalDeterminationForm, BaseNormalDetermi
                 field.required = False
 
         self.fields = self.apply_form_settings('proposal', self.fields)
+
+        if edit:
+            self.fields.pop('outcome')
+            self.draft_button_name = None
 
 
 class BatchConceptDeterminationForm(BaseConceptDeterminationForm, BaseBatchDeterminationForm):
