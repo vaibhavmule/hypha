@@ -53,6 +53,7 @@ from ..workflow import (
     review_statuses,
 )
 from .mixins import AccessFormData
+from .reviewer_role import ReviewerRole
 from .utils import (
     COMMUNITY_REVIEWER_GROUP_NAME,
     LIMIT_TO_PARTNERS,
@@ -635,6 +636,10 @@ class ApplicationSubmission(
             self.save()
 
     @property
+    def has_all_reviewer_roles_assigned(self):
+        return self.assigned.with_roles().count() == ReviewerRole.objects.count()
+
+    @property
     def community_review(self):
         return self.status in COMMUNITY_REVIEW_PHASES
 
@@ -719,6 +724,14 @@ class ApplicationSubmission(
         adjusted_index = stage_index + 1
 
         return adjusted_index == len(stages)
+
+    @property
+    def in_internal_review_phase(self):
+        return self.status in PHASES_MAPPING['internal-review']['statuses']
+
+    @property
+    def in_external_review_phase(self):
+        return self.status in PHASES_MAPPING['external-review']['statuses']
 
     # Methods for accessing data on the submission
 

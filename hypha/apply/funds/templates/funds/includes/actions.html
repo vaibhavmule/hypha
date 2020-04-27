@@ -14,6 +14,12 @@
 
 <a data-fancybox data-src="#screen-application" class="button button--bottom-space button--primary button--full-width {% if screening_form.should_show %}is-not-disabled{% else %}is-disabled{% endif %}" href="#">Screen application</a>
 
+{% if object.in_internal_review_phase or object.in_external_review_phase %}
+    {% if object.in_external_review_phase or not object.has_all_reviewer_roles_assigned %}
+        <a data-fancybox data-src="#update-reviewers" class="button button--bottom-space button--primary button--full-width" href="#">Assign reviewers</a>
+    {% endif %}
+{% endif %}
+
 <a data-fancybox data-src="#update-status" class="button button--primary button--full-width {% if progress_form.should_show %}is-not-disabled{% else %}is-disabled{% endif %}" href="#">Update status</a>
 
 
