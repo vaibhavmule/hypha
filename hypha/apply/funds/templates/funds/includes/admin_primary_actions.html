@@ -14,6 +14,12 @@
 
 <a data-fancybox data-src="#screen-application" class="button button--bottom-space button--primary button--full-width {% if screening_form.should_show %}is-not-disabled{% else %}is-disabled{% endif %}" href="#">Screen application</a>
 
+{% if object.is_determined %}
+    {% with determination=object.determinations.final.first %}
+        <a class="button button--primary button--full-width button--bottom-space" href="{% url 'apply:submissions:determinations:detail' submission_pk=object.id pk=determination.id %}">View determination</a>
+    {% endwith %}
+{% endif %}
+
 <a data-fancybox data-src="#update-status" class="button button--primary button--full-width {% if progress_form.should_show %}is-not-disabled{% else %}is-disabled{% endif %}" href="#">Update status</a>
 
 

@@ -60,6 +60,7 @@ class DeterminationFormTestCase(BaseViewTestCase):
 
     def test_cant_access_wrong_status(self):
         submission = ApplicationSubmissionFactory(status='rejected')
+        DeterminationFactory(submission=submission, author=self.user, rejected=True, submitted=True)
         response = self.get_page(submission, 'form')
         self.assertRedirects(response, self.absolute_url(submission.get_absolute_url()))
 
@@ -460,7 +461,7 @@ class EditDeterminationFormTestCase(BaseViewTestCase):
 
     def test_can_edit_determination(self):
         submission = ApplicationSubmissionFactory(status='rejected')
-        determination = DeterminationFactory(submission=submission)
+        determination = DeterminationFactory(submission=submission, author=self.user, accepted=True, submitted=True)
 
         self.post_page(submission, {
             'data': 'value',

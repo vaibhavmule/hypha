@@ -718,6 +718,12 @@ class ApplicationSubmission(
 
         return adjusted_index == len(stages)
 
+    @property
+    def is_determined(self):
+        accepted = self.status in PHASES_MAPPING['accepted']['statuses']
+        dismissed = self.status in PHASES_MAPPING['dismissed']['statuses']
+        return accepted or dismissed
+
     # Methods for accessing data on the submission
 
     def get_data(self):

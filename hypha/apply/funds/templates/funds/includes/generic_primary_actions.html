@@ -1,0 +1,13 @@
+{% load primaryactions_tags %}
+
+{% if request.user|should_display_primary_actions_block:object %}
+    <div class="js-actions-sidebar sidebar__inner sidebar__inner--light-blue sidebar__inner--actions {% if mobile %}sidebar__inner--mobile{% endif %}">
+        <h5>Actions to take</h5>
+
+        {% if object.is_determined %}
+            {% with determination=object.determinations.last %}
+                <a class="button button--primary button--full-width button--bottom-space" href="{% url 'apply:submissions:determinations:detail' submission_pk=object.id pk=determination.id %}">View determination</a>
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endif %}
