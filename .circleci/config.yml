@@ -114,6 +114,8 @@ jobs:
             python manage.py makemigrations --check --noinput --verbosity=1
             coverage run --source='hypha' manage.py test
             codecov
+            curl https://deepsource.io/cli | sh
+            ./bin/deepsource report --analyzer test-coverage --key python --value-file ./coverage.xml
 
   lint:
     executor: python
